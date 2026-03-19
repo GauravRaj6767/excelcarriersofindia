@@ -30,5 +30,11 @@ dist-ssr
 # Playwright
 .playwright-mcp/
 
+# Screenshots
+*.png
+!public/**/*.png
+*.jpeg
+screenshot-*
+
 # Claude
 .claude/

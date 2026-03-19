@@ -1,10 +1,15 @@
 import { Suspense } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, Phone, Mail } from "lucide-react";
 import { COMPANY } from "../../../lib/constants";
 import { ClayButton } from "../../ui/ClayButton";
 import { FloatingOrb } from "../../ui/FloatingOrb";
 import { GlobeCanvas } from "./GlobeCanvas";
+
+// On mobile devices use tel:, on desktop use mailto:
+const isMobile = () =>
+  typeof window !== "undefined" &&
+  /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
 const headlineWords = ["Delivering", "Tomorrow's", "Logistics,", "Today."];
 
@@ -12,7 +17,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden"
+      className="relative flex min-h-[90vh] items-center overflow-hidden"
     >
       {/* Background orbs */}
       <FloatingOrb
@@ -37,7 +42,7 @@ export function Hero() {
         delay={4}
       />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-6 pt-24 lg:grid-cols-2">
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-6 pt-24 pb-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
         {/* Left content */}
         <div>
           {/* Tag */}
@@ -81,7 +86,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.9 }}
             className="mt-6 max-w-lg text-lg leading-relaxed text-text-muted"
           >
-            {COMPANY.name} &mdash; {COMPANY.slogan}. Pan-India transportation,
+            {COMPANY.name} - {COMPANY.slogan}. Pan-India transportation,
             warehousing, and cross-border logistics engineered for the modern
             era.
           </motion.p>
@@ -101,10 +106,10 @@ export function Hero() {
                 </span>
               </ClayButton>
             </a>
-            <a href={`tel:${COMPANY.phone}`}>
+            <a href={isMobile() ? `tel:${COMPANY.phone}` : `mailto:${COMPANY.email}`}>
               <ClayButton variant="ghost" size="lg">
                 <span className="flex items-center gap-2">
-                  <Phone size={18} />
+                  {isMobile() ? <Phone size={18} /> : <Mail size={18} />}
                   Get a Quote
                 </span>
               </ClayButton>
@@ -114,10 +119,10 @@ export function Hero() {
 
         {/* Right: Globe */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-          className="hidden h-[500px] lg:block xl:h-[600px]"
+          className="hidden h-[380px] overflow-hidden lg:block xl:h-[420px]"
         >
           <Suspense
             fallback={
@@ -131,26 +136,6 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-xs tracking-widest text-text-muted uppercase">
-            Scroll
-          </span>
-          <div className="h-8 w-5 rounded-full" style={{ border: '1px solid var(--glass-border)' }}>
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="mx-auto mt-1 h-2 w-1 rounded-full bg-brand-primary"
-            />
-          </div>
-        </div>
-      </motion.div>
     </section>
   );
 }

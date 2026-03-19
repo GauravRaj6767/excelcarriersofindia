@@ -36,7 +36,7 @@ const contactItems = [
   {
     icon: Clock,
     label: "Working Hours",
-    value: "Mon \u2013 Sat, 9:00 AM \u2013 7:00 PM",
+    value: "Mon - Sat, 9:00 AM - 7:00 PM",
     href: undefined,
     color: "#6C63FF",
   },
@@ -44,7 +44,7 @@ const contactItems = [
 
 export function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden py-24 lg:py-32">
+    <section id="contact" className="relative overflow-hidden py-16 lg:py-20">
       <FloatingOrb
         color="rgba(108,99,255,0.08)"
         size={500}
@@ -60,7 +60,7 @@ export function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-10 text-center"
         >
           <span className="font-heading text-sm font-semibold tracking-widest text-brand-primary uppercase">
             Get in Touch
@@ -116,7 +116,11 @@ export function Contact() {
                         {item.label}
                       </p>
                       <p className="mt-1 text-base font-medium text-text-main break-all sm:break-normal">
-                        {item.value}
+                        {item.label === "Working Hours" ? (
+                          <>
+                            Mon - Sat,<br className="sm:hidden" />{" "}9:00 AM - 7:00 PM
+                          </>
+                        ) : item.value}
                       </p>
                     </div>
                   </div>

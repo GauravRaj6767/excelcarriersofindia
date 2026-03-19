@@ -15,11 +15,11 @@ import {
 export const COMPANY = {
   name: "Excel Carriers of India",
   shortName: "ECI",
-  slogan: "Your Smile \u2013 Our Satisfaction",
+  slogan: "Your Smile - Our Satisfaction",
   founded: 2007,
   proprietor: "Manoj Kumar Singh",
   address:
-    "Somu Residency, Flat No. 3E, Petbasheerabad, Hyderabad, Telangana 500055",
+    "Excel Carriers of India, FLAT NO. 3E 3rd floor, Somu residency, above HDFC BANK, Petbasheerabad, Jeedimetla, Hyderabad, Telangana 500067",
   phone: "+91 9963101240",
   email: "excelcarriersofindia@gmail.com",
 } as const;
@@ -122,7 +122,7 @@ export interface StatItem {
 }
 
 export const STATS: StatItem[] = [
-  { value: 17, suffix: "+", label: "Years of Excellence" },
+  { value: new Date().getFullYear() - 2007, suffix: "+", label: "Years of Excellence" },
   { value: 30, suffix: "+", label: "Major Clients" },
   { value: 28, suffix: "", label: "States Covered" },
   { value: 99, suffix: "%", label: "On-Time Rate" },

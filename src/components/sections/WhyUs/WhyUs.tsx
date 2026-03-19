@@ -28,7 +28,7 @@ const ACCENT_COLORS = [
 
 export function WhyUs() {
   return (
-    <section id="why-us" className="relative overflow-hidden py-24 lg:py-32">
+    <section id="why-us" className="relative overflow-hidden py-16 lg:py-20">
       <FloatingOrb
         color="rgba(245,200,66,0.05)"
         size={500}
@@ -51,7 +51,7 @@ export function WhyUs() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="mb-20"
+          className="mb-12"
         >
           <span className="font-heading text-sm font-semibold tracking-widest text-brand-gold uppercase">
             Why Choose Us

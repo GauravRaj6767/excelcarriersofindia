@@ -20,7 +20,7 @@ const cardVariants = {
 
 export function Services() {
   return (
-    <section id="services" className="relative overflow-hidden py-24 lg:py-32">
+    <section id="services" className="relative overflow-hidden py-16 lg:py-20">
       <FloatingOrb
         color="rgba(255,107,53,0.06)"
         size={450}
@@ -43,7 +43,7 @@ export function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          className="mb-10 text-center"
         >
           <span className="font-heading text-sm font-semibold tracking-widest text-brand-teal uppercase">
             What We Do

@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <h3 className="font-heading text-lg font-bold text-text-main">
-              <span className="text-brand-primary">Excel</span> Carriers
+              <span className="text-brand-primary">Excel</span> Carriers of India
             </h3>
             <p className="mt-1 text-sm text-text-muted">{COMPANY.slogan}</p>
           </div>

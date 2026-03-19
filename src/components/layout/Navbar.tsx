@@ -57,9 +57,13 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         <a
           href="#home"
           onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }}
-          className="font-heading text-xl font-bold tracking-tight text-text-main"
+          className="flex-shrink-0"
         >
-          <span className="text-brand-primary">Excel</span> Carriers
+          <img
+            src={isDark ? "/test2.png" : "/test1.png"}
+            alt={COMPANY.name}
+            className="h-10 w-auto lg:h-14"
+          />
         </a>
 
         {/* Desktop Nav */}

@@ -39,7 +39,7 @@ export function Clients() {
   const secondHalf = CLIENTS.slice(Math.ceil(CLIENTS.length / 2));
 
   return (
-    <section id="clients" className="relative py-24 lg:py-32">
+    <section id="clients" className="relative py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <motion.div
@@ -47,7 +47,7 @@ export function Clients() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          className="mb-8 text-center"
         >
           <span className="font-heading text-sm font-semibold tracking-widest text-brand-accent uppercase">
             Our Clients
