@@ -20,7 +20,7 @@ export const COMPANY = {
   proprietor: "Manoj Kumar Singh",
   address:
     "Excel Carriers of India, FLAT NO. 3E 3rd floor, Somu residency, above HDFC BANK, Petbasheerabad, Jeedimetla, Hyderabad, Telangana 500067",
-  phone: "+91 9963101240",
+  phone: "+9140-35606840",
   email: "excelcarriersofindia@gmail.com",
 } as const;
 
