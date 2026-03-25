@@ -104,8 +104,8 @@ function CurvedECI({ isDark }: { isDark: boolean }) {
     ? `drop-shadow(0 0 6px rgba(108,99,255,0.9)) drop-shadow(0 0 14px rgba(108,99,255,0.5))`
     : `drop-shadow(0 0 5px rgba(26,86,219,0.6)) drop-shadow(0 0 10px rgba(26,86,219,0.3))`;
 
-  // Arc: center shifted down, larger radius = text sits higher above globe surface
-  const cx = 100, cy = 112, r = 90;
+  // Arc: center shifted down further, larger radius = more gap between text and globe
+  const cx = 100, cy = 116, r = 97;
   const startAngle = -110 * (Math.PI / 180);
   const endAngle = -70 * (Math.PI / 180);
   const x1 = cx + r * Math.cos(startAngle);
