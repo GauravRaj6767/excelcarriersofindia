@@ -5,7 +5,7 @@ import { Hero } from "./components/sections/Hero/Hero";
 import { About } from "./components/sections/About/About";
 import { Services } from "./components/sections/Services/Services";
 import { WhyUs } from "./components/sections/WhyUs/WhyUs";
-import { Clients } from "./components/sections/Clients/Clients";
+// import { Clients } from "./components/sections/Clients/Clients";
 import { Contact } from "./components/sections/Contact/Contact";
 
 function AppContent() {
