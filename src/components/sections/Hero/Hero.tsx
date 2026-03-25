@@ -5,6 +5,7 @@ import { COMPANY } from "../../../lib/constants";
 import { ClayButton } from "../../ui/ClayButton";
 import { FloatingOrb } from "../../ui/FloatingOrb";
 import { GlobeCanvas } from "./GlobeCanvas";
+import { useTheme } from "../../../lib/ThemeContext";
 
 // On mobile devices use tel:, on desktop use mailto:
 const isMobile = () =>
@@ -14,6 +15,9 @@ const isMobile = () =>
 const headlineWords = ["Delivering", "Tomorrow's", "Logistics,", "Today."];
 
 export function Hero() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <section
       id="home"
@@ -131,7 +135,7 @@ export function Hero() {
               </div>
             }
           >
-            <GlobeCanvas />
+            <GlobeCanvas isDark={isDark} />
           </Suspense>
         </motion.div>
       </div>

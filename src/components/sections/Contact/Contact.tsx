@@ -15,8 +15,8 @@ const contactItems = [
   {
     icon: Phone,
     label: "Phone",
-    value: COMPANY.phone,
-    href: `tel:${COMPANY.phone}`,
+    value: `${COMPANY.phone}\n${COMPANY.phone2}`,
+    href: undefined,
     color: "#00D4AA",
   },
   {
@@ -115,13 +115,24 @@ export function Contact() {
                       <p className="text-xs font-medium tracking-wider text-text-muted uppercase">
                         {item.label}
                       </p>
-                      <p className="mt-1 text-base font-medium text-text-main break-all sm:break-normal">
-                        {item.label === "Working Hours" ? (
-                          <>
-                            Mon - Sat,<br className="sm:hidden" />{" "}9:00 AM - 7:00 PM
-                          </>
-                        ) : item.value}
-                      </p>
+                      {item.label === "Phone" ? (
+                        <div className="mt-1 flex flex-col gap-1">
+                          <a href={`tel:${COMPANY.phone}`} className="text-base font-medium text-text-main hover:text-brand-primary transition-colors">
+                            {COMPANY.phone}
+                          </a>
+                          <a href={`tel:${COMPANY.phone2}`} className="text-base font-medium text-text-main hover:text-brand-primary transition-colors">
+                            {COMPANY.phone2}
+                          </a>
+                        </div>
+                      ) : (
+                        <p className="mt-1 text-base font-medium text-text-main break-all sm:break-normal">
+                          {item.label === "Working Hours" ? (
+                            <>
+                              Mon - Sat,<br className="sm:hidden" />{" "}9:00 AM - 7:00 PM
+                            </>
+                          ) : item.value}
+                        </p>
+                      )}
                     </div>
                   </div>
                 );

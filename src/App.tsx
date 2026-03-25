@@ -18,7 +18,7 @@ function AppContent() {
         <About />
         <Services />
         <WhyUs />
-        <Clients />
+        {/* <Clients /> */}
         <Contact />
       </main>
       <Footer />

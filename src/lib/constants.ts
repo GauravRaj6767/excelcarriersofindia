@@ -21,6 +21,7 @@ export const COMPANY = {
   address:
     "Excel Carriers of India, FLAT NO. 3E 3rd floor, Somu residency, above HDFC BANK, Petbasheerabad, Jeedimetla, Hyderabad, Telangana 500067",
   phone: "+9140-35606840",
+  phone2: "+919963101240",
   email: "excelcarriersofindia@gmail.com",
 } as const;
 
@@ -123,7 +124,7 @@ export interface StatItem {
 
 export const STATS: StatItem[] = [
   { value: new Date().getFullYear() - 2007, suffix: "+", label: "Years of Excellence" },
-  { value: 30, suffix: "+", label: "Major Clients" },
+  { value: 500, suffix: "+", label: "Major Clients" },
   { value: 28, suffix: "", label: "States Covered" },
   { value: 99, suffix: "%", label: "On-Time Rate" },
 ];
@@ -164,6 +165,6 @@ export const NAV_LINKS = [
   { href: "#about", label: "About" },
   { href: "#services", label: "Services" },
   { href: "#why-us", label: "Why Us" },
-  { href: "#clients", label: "Clients" },
+  // { href: "#clients", label: "Clients" },
   { href: "#contact", label: "Contact" },
 ] as const;
