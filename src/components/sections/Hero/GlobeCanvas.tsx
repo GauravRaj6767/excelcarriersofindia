@@ -1,6 +1,6 @@
 import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Sphere } from "@react-three/drei";
+import { Sphere, Text3D, Center } from "@react-three/drei";
 import * as THREE from "three";
 
 const CONTINENTS: [number, number][][] = [
@@ -20,12 +20,12 @@ function createGlobeTexture(isDark: boolean): THREE.CanvasTexture {
   canvas.height = size;
   const ctx = canvas.getContext("2d")!;
 
-  // Ocean
-  ctx.fillStyle = isDark ? "#0d1b3e" : "#b8d4f0";
+  // Ocean background
+  ctx.fillStyle = isDark ? "#0a1628" : "#c8dff5";
   ctx.fillRect(0, 0, size, size);
 
   // Grid lines
-  ctx.strokeStyle = isDark ? "rgba(140,120,255,0.45)" : "rgba(30,80,180,0.25)";
+  ctx.strokeStyle = isDark ? "rgba(100,140,255,0.4)" : "rgba(80,120,220,0.35)";
   ctx.lineWidth = 1.2;
   for (let lat = -90; lat <= 90; lat += 30) {
     const y = ((90 - lat) / 180) * size;
@@ -36,9 +36,9 @@ function createGlobeTexture(isDark: boolean): THREE.CanvasTexture {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, size); ctx.stroke();
   }
 
-  // Continents — brighter in dark mode
-  ctx.fillStyle = isDark ? "#7c8fa8" : "#7da870";
-  ctx.strokeStyle = isDark ? "#a0b4cc" : "#5a8050";
+  // Continents
+  ctx.fillStyle = isDark ? "#1a3a7a" : "#2255cc";
+  ctx.strokeStyle = isDark ? "#2a5aaa" : "#1a44bb";
   ctx.lineWidth = 2;
   for (const polygon of CONTINENTS) {
     ctx.beginPath();
@@ -58,30 +58,76 @@ function createGlobeTexture(isDark: boolean): THREE.CanvasTexture {
 function Globe({ isDark }: { isDark: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const texture = useMemo(() => createGlobeTexture(isDark), [isDark]);
+  useEffect(() => () => texture.dispose(), [texture]);
 
-  useEffect(() => { return () => { texture.dispose(); }; }, [texture]);
-
-  const gridColor = isDark ? "#8b80ff" : "#2563eb";
-
-  useFrame((_state, delta) => {
-    if (groupRef.current) groupRef.current.rotation.y += delta * 0.18;
+  useFrame((_s, delta) => {
+    if (groupRef.current) groupRef.current.rotation.y += delta * 0.3;
   });
+
+  const sphereColor = isDark ? "#1a2a4a" : "#dce8f8";
+  const gridColor = isDark ? "#4466cc" : "#3355bb";
+  const specularColor = isDark ? "#6688ff" : "#aabbff";
+
+  return (
+    <group ref={groupRef}>
+      {/* Main globe sphere */}
+      <Sphere args={[2, 64, 64]}>
+        <meshPhongMaterial
+          map={texture}
+          color={sphereColor}
+          shininess={isDark ? 60 : 80}
+          specular={new THREE.Color(specularColor)}
+        />
+      </Sphere>
+      {/* Grid overlay */}
+      <Sphere args={[2.02, 32, 32]}>
+        <meshBasicMaterial
+          color={gridColor}
+          wireframe
+          transparent
+          opacity={isDark ? 0.12 : 0.1}
+        />
+      </Sphere>
+    </group>
+  );
+}
+
+function ECILetters({ isDark }: { isDark: boolean }) {
+  const letterColor = isDark ? "#4488ff" : "#1a44cc";
+  const letterEmissive = isDark ? "#1133aa" : "#0a2266";
+
+  // Position E, C, I manually above the globe
+  const letters = [
+    { char: "E", x: -1.1 },
+    { char: "C", x: 0 },
+    { char: "I", x: 1.1 },
+  ];
 
   return (
     <>
-      <group ref={groupRef}>
-        <Sphere args={[2, 64, 64]}>
-          <meshPhongMaterial
-            map={texture}
-            shininess={isDark ? 20 : 30}
-            specular={new THREE.Color(isDark ? "#8b80ff" : "#90caf9")}
-          />
-        </Sphere>
-        <Sphere args={[2.01, 28, 28]}>
-          <meshBasicMaterial color={gridColor} wireframe transparent opacity={isDark ? 0.1 : 0.08} />
-        </Sphere>
-      </group>
-
+      {letters.map(({ char, x }) => (
+        <Center key={char} position={[x, 2.85, 0]}>
+          <Text3D
+            font="https://threejs.org/examples/fonts/helvetiker_bold.typeface.json"
+            size={0.65}
+            height={0.3}
+            curveSegments={12}
+            bevelEnabled
+            bevelThickness={0.04}
+            bevelSize={0.02}
+            bevelSegments={4}
+          >
+            {char}
+            <meshStandardMaterial
+              color={letterColor}
+              emissive={letterEmissive}
+              emissiveIntensity={isDark ? 0.4 : 0.1}
+              metalness={0.3}
+              roughness={0.3}
+            />
+          </Text3D>
+        </Center>
+      ))}
     </>
   );
 }
@@ -89,94 +135,37 @@ function Globe({ isDark }: { isDark: boolean }) {
 function Scene({ isDark }: { isDark: boolean }) {
   return (
     <>
-      <ambientLight intensity={isDark ? 0.9 : 1.3} />
-      <pointLight position={[8, 8, 8]} intensity={isDark ? 1.2 : 0.5} color={isDark ? "#a090ff" : "#93c5fd"} />
-      <pointLight position={[-8, -4, -8]} intensity={isDark ? 0.4 : 0.15} color={isDark ? "#00D4AA" : "#bae6fd"} />
+      <ambientLight intensity={isDark ? 0.5 : 1.0} />
+      <pointLight position={[6, 8, 6]} intensity={isDark ? 1.5 : 1.2} color={isDark ? "#aabbff" : "#ffffff"} castShadow />
+      <pointLight position={[-6, -4, -4]} intensity={isDark ? 0.4 : 0.2} color={isDark ? "#4466ff" : "#8899cc"} />
       <Globe isDark={isDark} />
+      <ECILetters isDark={isDark} />
     </>
-  );
-}
-
-// Curved ECI text rendered as SVG arc
-function CurvedECI({ isDark }: { isDark: boolean }) {
-  const color = isDark ? "#ffffff" : "#1a56db";
-  const glowFilter = isDark
-    ? `drop-shadow(0 0 6px rgba(108,99,255,0.9)) drop-shadow(0 0 14px rgba(108,99,255,0.5))`
-    : `drop-shadow(0 0 5px rgba(26,86,219,0.6)) drop-shadow(0 0 10px rgba(26,86,219,0.3))`;
-
-  // Arc: center shifted down further, larger radius = more gap between text and globe
-  const cx = 100, cy = 116, r = 97;
-  const startAngle = -110 * (Math.PI / 180);
-  const endAngle = -70 * (Math.PI / 180);
-  const x1 = cx + r * Math.cos(startAngle);
-  const y1 = cy + r * Math.sin(startAngle);
-  const x2 = cx + r * Math.cos(endAngle);
-  const y2 = cy + r * Math.sin(endAngle);
-
-  // Wider arc for text to sit on: -130° to -50°
-  const tStartAngle = -130 * (Math.PI / 180);
-  const tEndAngle = -50 * (Math.PI / 180);
-  const tx1 = cx + r * Math.cos(tStartAngle);
-  const ty1 = cy + r * Math.sin(tStartAngle);
-  const tx2 = cx + r * Math.cos(tEndAngle);
-  const ty2 = cy + r * Math.sin(tEndAngle);
-
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 z-10"
-      aria-hidden="true"
-      style={{ filter: glowFilter }}
-    >
-      <svg
-        viewBox="0 0 200 200"
-        className="h-full w-full"
-        overflow="visible"
-      >
-        <defs>
-          <path
-            id="eci-arc"
-            d={`M ${tx1} ${ty1} A ${r} ${r} 0 0 1 ${tx2} ${ty2}`}
-            fill="none"
-          />
-        </defs>
-        <text
-          fontFamily="'Space Grotesk', 'Inter', Arial, sans-serif"
-          fontSize="19"
-          fontWeight="800"
-          fill={color}
-          letterSpacing="8"
-        >
-          <textPath href="#eci-arc" startOffset="50%" textAnchor="middle">
-            E C I
-          </textPath>
-        </text>
-        {/* invisible ref arcs just to keep defs clean */}
-        <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="none" />
-      </svg>
-    </div>
   );
 }
 
 export function GlobeCanvas({ isDark }: { isDark: boolean }) {
   return (
-    <div className="relative h-full w-full">
-      <CurvedECI isDark={isDark} />
-
+    <div
+      className="relative h-full w-full"
+      style={{
+        maskImage: "radial-gradient(ellipse 85% 75% at 50% 45%, black 45%, transparent 70%)",
+        WebkitMaskImage: "radial-gradient(ellipse 85% 75% at 50% 45%, black 45%, transparent 70%)",
+      }}
+    >
       <Canvas
-        // Tilt camera slightly downward to show top of globe like the logo
-        camera={{ position: [0, 1.5, 7.5], fov: 38 }}
+        camera={{ position: [0, 0.8, 7.5], fov: 40 }}
         style={{ background: "transparent" }}
         gl={{
           alpha: true,
           antialias: true,
           powerPreference: "default",
-          preserveDrawingBuffer: false,
         }}
         onCreated={({ gl }) => {
           const canvas = gl.domElement;
           const handleContextLost = (e: Event) => {
             e.preventDefault();
-            setTimeout(() => { try { gl.forceContextRestore(); } catch (_) { /* noop */ } }, 300);
+            setTimeout(() => { try { gl.forceContextRestore(); } catch (_) { /**/ } }, 300);
           };
           canvas.addEventListener("webglcontextlost", handleContextLost);
           return () => canvas.removeEventListener("webglcontextlost", handleContextLost);

@@ -205,8 +205,7 @@ export function About() {
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-text-muted">
               Founded by {COMPANY.proprietor}, {COMPANY.name} has grown from a
-              regional carrier into a pan-India logistics powerhouse. We combine
-              deep industry expertise with cutting-edge technology to deliver
+              regional carrier into a pan-India logistics powerhouse. We deliver
               seamless supply chain solutions across the subcontinent and beyond.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-text-muted">

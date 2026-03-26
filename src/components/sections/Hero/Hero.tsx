@@ -1,11 +1,97 @@
-import { Suspense } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Phone, Mail } from "lucide-react";
 import { COMPANY } from "../../../lib/constants";
 import { ClayButton } from "../../ui/ClayButton";
 import { FloatingOrb } from "../../ui/FloatingOrb";
-import { GlobeCanvas } from "./GlobeCanvas";
 import { useTheme } from "../../../lib/ThemeContext";
+
+const LOOP_AT = 0.9;      // seek back at this fraction of video duration
+const FADE_OUT_START = 0.85; // start fading out at this fraction (must be < LOOP_AT)
+const FADE_DURATION = 0.4;   // seconds for fade out + fade in
+
+function SeamlessGlobe({ isDark }: { isDark: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const opacityRef = useRef(1);
+  const fadingRef = useRef(false);
+  const animFrameRef = useRef<number>(0);
+
+  const baseFilter = isDark ? "invert(1) hue-rotate(180deg) brightness(0.85)" : "brightness(0.972)";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      if (!video.duration || fadingRef.current) return;
+      const fadeOutTime = video.duration * FADE_OUT_START;
+
+      if (video.currentTime >= fadeOutTime) {
+        fadingRef.current = true;
+
+        const startTime = performance.now();
+        const halfDuration = FADE_DURATION * 500; // ms for each half
+
+        const animate = (now: number) => {
+          const elapsed = now - startTime;
+
+          if (elapsed < halfDuration) {
+            // Fading out
+            const t = elapsed / halfDuration;
+            opacityRef.current = 1 - t;
+            if (video) video.style.opacity = String(opacityRef.current);
+            animFrameRef.current = requestAnimationFrame(animate);
+          } else if (elapsed < halfDuration * 2) {
+            // Seek to start at midpoint (while invisible)
+            if (video.currentTime > video.duration * LOOP_AT) {
+              video.currentTime = 0;
+            }
+            // Fading in
+            const t = (elapsed - halfDuration) / halfDuration;
+            opacityRef.current = t;
+            if (video) video.style.opacity = String(opacityRef.current);
+            animFrameRef.current = requestAnimationFrame(animate);
+          } else {
+            // Done
+            if (video) video.style.opacity = "1";
+            opacityRef.current = 1;
+            fadingRef.current = false;
+          }
+        };
+
+        animFrameRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
+
+  return (
+    <div className="relative w-full max-w-[440px] xl:max-w-[480px]" style={{ aspectRatio: "1 / 1" }}>
+      <video
+        ref={videoRef}
+        src="/eci_globe-cropped.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          filter: baseFilter,
+          // Tighter mask — cuts bottom corners harder, center stays sharp
+          maskImage: "radial-gradient(ellipse 80% 82% at 50% 46%, black 52%, transparent 74%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 82% at 50% 46%, black 52%, transparent 74%)",
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+        }}
+      />
+    </div>
+  );
+}
 
 // On mobile devices use tel:, on desktop use mailto:
 const isMobile = () =>
@@ -121,22 +207,14 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right: Globe */}
+        {/* Right: Globe Video */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-          className="hidden h-[380px] overflow-hidden lg:block xl:h-[420px]"
+          className="hidden items-center justify-center lg:flex"
         >
-          <Suspense
-            fallback={
-              <div className="flex h-full items-center justify-center">
-                <div className="h-16 w-16 animate-spin rounded-full border-2 border-brand-primary border-t-transparent" />
-              </div>
-            }
-          >
-            <GlobeCanvas isDark={isDark} />
-          </Suspense>
+          <SeamlessGlobe isDark={isDark} />
         </motion.div>
       </div>
 
